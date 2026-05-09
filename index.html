@@ -99,7 +99,7 @@
 </div>
 
 <div class="pickup-banner">
-    <i class="fas fa-map-marker-alt"></i> 📍 Retira tu pedido en: Reconquista 115, Unquillo, Barrio Residencial (No realizamos envíos)
+    <i class="fas fa-map-marker-alt"></i> 📍 Retiro por local: Reconquista 115, Unquillo, Barrio Residencial (No realizamos envíos)
 </div>
 
 <main>
@@ -175,7 +175,7 @@
         vinchasVlack: baseURL + "vinchas%20vlack.jpg"
     };
 
-    // ✅ MAPEO DE COLORES CORREGIDO
+    // Mapeo de colores a sus códigos CSS
     const colorMap = {
         "Blanco": "#FFFFFF",
         "Fucsia": "#FF00FF",
@@ -183,26 +183,28 @@
         "Marrón": "#8B4513",
         "Negro": "#000000",
         "Verde agua": "#00FFCC",
+        "Violeta": "#8B5CF6",
         "Azul": "#0000FF",
         "Verde": "#00AA00",
         "Roja": "#FF0000",
         "Rojo": "#FF0000",
         "Rosa": "#FF69B4",
-        "Violeta": "#8B5CF6",
         "Lila": "#C8A2C8",
         "Celeste": "#87CEEB",
         "Naranja": "#FFA500"
     };
 
     const productos = [
+        // INDUMENTARIA
         { id: 1, nombre: "Top Deportivo", precio: 8000, colores: ["Blanco", "Fucsia", "Gris", "Marrón"], talles: ["M"], tieneTalle: true, requiereColor: true, imagenes: { "Blanco": [imagenes.topBlanco], "Fucsia": [imagenes.topFuxia], "Gris": [imagenes.topGriz], "Marrón": [imagenes.topMarron] }, destacado: true, categoria: "indumentaria", imagenPorDefecto: imagenes.topBlanco },
-        { id: 2, nombre: "Medias Negras", precio: 7500, colores: ["Negro"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Negro": [imagenes.mediasNegras] }, destacado: false, categoria: "indumentaria", imagenPorDefecto: imagenes.mediasNegras },
+        { id: 2, nombre: "Medias Negras", precio: 7500, colores: ["Negro"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Negro": [imagenes.mediasNegras] }, destacado: true, categoria: "indumentaria", imagenPorDefecto: imagenes.mediasNegras },
         { id: 3, nombre: "Medias Rosas", precio: 6500, colores: ["Rosa"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Rosa": [imagenes.mediasRosas] }, destacado: false, categoria: "indumentaria", imagenPorDefecto: imagenes.mediasRosas },
-        { id: 4, nombre: "Medias Vlacks", precio: 9900, colores: ["Azul", "Verde", "Roja", "Fucsia"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Azul": [imagenes.mediaVlack], "Verde": [imagenes.mediaVlack], "Roja": [imagenes.mediaVlack], "Fucsia": [imagenes.mediaVlack] }, destacado: true, categoria: "indumentaria", imagenPorDefecto: imagenes.mediaVlack },
-        { id: 5, nombre: "Vinchas Black", precio: 6800, colores: ["Negro", "Verde agua", "Fucsia"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Negro": [imagenes.vinchasVlack], "Verde agua": [imagenes.vinchasVlack], "Fucsia": [imagenes.vinchasVlack] }, destacado: true, categoria: "indumentaria", imagenPorDefecto: imagenes.vinchasVlack },
+        { id: 4, nombre: "Medias Vlacks", precio: 9900, colores: ["Azul", "Verde", "Roja", "Fucsia"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Azul": [imagenes.mediaVlack], "Verde": [imagenes.mediaVlack], "Roja": [imagenes.mediaVlack], "Fucsia": [imagenes.mediaVlack] }, destacado: false, categoria: "indumentaria", imagenPorDefecto: imagenes.mediaVlack },
+        // ACCESORIOS
+        { id: 5, nombre: "Vinchas Black", precio: 6800, colores: ["Negro", "Verde agua", "Fucsia", "Blanco", "Violeta"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Negro": [imagenes.vinchasVlack], "Verde agua": [imagenes.vinchasVlack], "Fucsia": [imagenes.vinchasVlack], "Blanco": [imagenes.vinchasVlack], "Violeta": [imagenes.vinchasVlack] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.vinchasVlack },
         { id: 6, nombre: "Canilleras de Hockey", precio: 12000, colores: ["Rosa", "Violeta"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Rosa": [imagenes.canilleraRosa], "Violeta": [imagenes.canilleraVioleta] }, destacado: true, categoria: "accesorios", imagenPorDefecto: imagenes.canilleraRosa },
-        { id: 7, nombre: "Bucales de Hockey", precio: 4500, colores: ["Lila", "Rojo", "Celeste", "Naranja"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Lila": [imagenes.bucales], "Rojo": [imagenes.bucales], "Celeste": [imagenes.bucales], "Naranja": [imagenes.bucales] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.bucales },
-        { id: 8, nombre: "Gel Algabo", precio: 3000, colores: ["Fijación extra fuerte"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Fijación extra fuerte": [imagenes.gelAlgabo] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.gelAlgabo }
+        { id: 7, nombre: "Bucales de Hockey", precio: 4500, colores: ["Azul", "Rosa", "Naranja", "Lila"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Azul": [imagenes.bucales], "Rosa": [imagenes.bucales], "Naranja": [imagenes.bucales], "Lila": [imagenes.bucales] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.bucales },
+        { id: 8, nombre: "Gel Algabo", precio: 300, colores: ["Fijación extra fuerte"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Fijación extra fuerte": [imagenes.gelAlgabo] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.gelAlgabo }
     ];
 
     let carrito = [];

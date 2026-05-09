@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>SPORT FITNESS - Insumos Deportivos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #ffffff; color: #2d1b3c; }
+        :root { --fucsia: #ff2a7a; --violeta: #8b5cf6; --violeta-oscuro: #6d28d9; --blanco: #ffffff; --gris-claro: #f8f9fc; --texto: #1e1b2e; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header { background: var(--blanco); box-shadow: 0 2px 15px rgba(139, 92, 246, 0.1); position: sticky; top: 0; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; flex-wrap: wrap; gap: 15px; }
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo-img { height: 150px; width: auto; display: block; border-radius: 12px; }
+        .logo-text { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, var(--fucsia), var(--violeta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .hamburger { display: none; font-size: 1.8rem; cursor: pointer; color: var(--violeta); background: none; border: none; }
+        .nav-menu { display: flex; list-style: none; gap: 35px; }
+        .nav-menu li a { text-decoration: none; font-weight: 600; color: var(--texto); transition: 0.3s; font-size: 1rem; }
+        .nav-menu li a:hover, .nav-menu li a.active { color: var(--fucsia); }
+        .cart-wrapper { position: relative; cursor: pointer; }
+        .cart-icon { font-size: 1.8rem; color: var(--violeta); }
+        .cart-count { position: absolute; top: -8px; right: -12px; background: var(--fucsia); color: white; font-size: 0.7rem; font-weight: bold; padding: 2px 7px; border-radius: 30px; min-width: 20px; text-align: center; }
+        .pickup-banner { background: linear-gradient(135deg, var(--fucsia), var(--violeta)); color: white; text-align: center; padding: 12px; font-size: 0.9rem; font-weight: 500; }
+        .section { padding: 50px 0; }
+        .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 40px; position: relative; display: inline-block; }
+        .section-title:after { content: ''; position: absolute; bottom: -10px; left: 0; width: 80px; height: 4px; background: linear-gradient(90deg, var(--fucsia), var(--violeta)); border-radius: 4px; }
+        .productos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 35px; margin-top: 20px; }
+        .product-card { background: var(--blanco); border-radius: 24px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; border: 1px solid #f0eaff; cursor: pointer; position: relative; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(139, 92, 246, 0.15); }
+        .product-img-container { width: 100%; height: 250px; background: #f3f0ff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; }
+        .product-info { padding: 20px; }
+        .product-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; }
+        .product-price { color: var(--fucsia); font-weight: 800; font-size: 1.4rem; margin: 10px 0; }
+        .btn-quick-view { background: linear-gradient(135deg, var(--violeta), var(--violeta-oscuro)); color: white; border: none; padding: 8px 16px; border-radius: 30px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-quick-view:hover { background: linear-gradient(135deg, var(--fucsia), var(--violeta)); }
+        .destacado-badge { position: absolute; top: 10px; right: 10px; background: var(--fucsia); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; z-index: 2; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; max-width: 550px; width: 90%; border-radius: 24px; overflow: hidden; position: relative; max-height: 90vh; overflow-y: auto; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: white; cursor: pointer; z-index: 10; background: rgba(0,0,0,0.6); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .swiper { width: 100%; height: 350px; }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: contain; background: #f9f9f9; }
+        .modal-info { padding: 25px; }
+        .modal-title { font-size: 1.5rem; font-weight: 800; }
+        .modal-price { color: var(--fucsia); font-size: 1.8rem; font-weight: 800; margin: 10px 0; }
+        .color-selector, .size-selector { margin: 15px 0; }
+        .color-options, .size-options { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+        .color-option { width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 3px solid #ddd; transition: 0.2s; background-size: cover; background-position: center; }
+        .color-option.selected { border: 3px solid var(--fucsia); transform: scale(1.1); box-shadow: 0 0 10px var(--fucsia); }
+        .size-option { padding: 8px 20px; border: 1px solid #ddd; border-radius: 30px; cursor: pointer; transition: 0.2s; }
+        .size-option.selected { background: var(--violeta); color: white; border-color: var(--violeta); }
+        .modal-add-btn { background: linear-gradient(135deg, var(--violeta), var(--violeta-oscuro)); color: white; border: none; padding: 14px; width: 100%; border-radius: 50px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px; transition: 0.3s; }
+        .modal-add-btn.disabled { opacity: 0.5; cursor: not-allowed; background: #999; }
+        .cart-sidebar { position: fixed; top: 0; right: -450px; width: 400px; max-width: 90%; height: 100%; background: white; box-shadow: -5px 0 25px rgba(0,0,0,0.2); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 20px; border-left: 5px solid var(--fucsia); }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f0eaff; padding-bottom: 15px; margin-bottom: 15px; }
+        .close-cart { font-size: 1.7rem; cursor: pointer; color: var(--fucsia); }
+        .cart-items { flex: 1; overflow-y: auto; margin-bottom: 20px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .cart-item-info p { font-weight: 600; font-size: 0.9rem; }
+        .cart-item-variant { font-size: 0.7rem; color: #888; }
+        .remove-item { background: none; border: none; color: #ff4d6d; cursor: pointer; font-size: 1rem; margin-left: 10px; }
+        .cart-total { font-weight: 800; font-size: 1.3rem; margin: 15px 0; border-top: 2px solid #eee; padding-top: 15px; text-align: right; }
+        .pickup-info { background: #f0eaff; padding: 12px; border-radius: 12px; margin: 15px 0; font-size: 0.8rem; text-align: center; }
+        .btn-whatsapp { background: #25D366; color: white; border: none; padding: 14px; border-radius: 50px; font-weight: bold; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1500; display: none; }
+        .overlay.active { display: block; }
+        @media (max-width: 768px) { .hamburger { display: block; } .nav-menu { position: fixed; left: -100%; top: 80px; flex-direction: column; background: white; width: 70%; height: calc(100vh - 80px); box-shadow: 2px 0 15px rgba(0,0,0,0.1); padding: 30px 20px; transition: left 0.3s; gap: 25px; z-index: 1200; } .nav-menu.active { left: 0; } .logo-text { font-size: 1.2rem; } .logo-img { height: 80px; } }
+        footer { background: var(--gris-claro); text-align: center; padding: 30px; margin-top: 30px; color: #5b4b6e; }
+        .error-message { color: red; font-size: 0.8rem; margin-top: 5px; display: none; }
+        @keyframes fadeInOut { 0% { opacity: 0; transform: translateX(50px); } 15% { opacity: 1; transform: translateX(0); } 85% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(50px); } }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <img class="logo-img" src="https://raw.githubusercontent.com/estudianteagustinf-source/SportFitness-imagenes/main/logo%20sport%20fitness.jpg" alt="Logo SPORT FITNESS">
+                <span class="logo-text">SPORT FITNESS</span>
+            </div>
+            <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#" data-section="indumentaria" class="nav-link active">Indumentaria</a></li>
+                <li><a href="#" data-section="accesorios" class="nav-link">Accesorios</a></li>
+            </ul>
+            <div class="cart-wrapper" id="cartIconBtn">
+                <i class="fas fa-shopping-cart cart-icon"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pickup-banner">
+    <i class="fas fa-map-marker-alt"></i> 📍 Retira tu pedido en: Reconquista 115, Unquillo, Barrio Residencial (No realizamos envíos)
+</div>
+
+<main>
+    <div class="container" id="productosContainer"></div>
+</main>
+
+<footer>
+    <p>💪 SPORT FITNESS - Todo para tu entrenamiento</p>
+    <p>📍 Reconquista 115, Unquillo | 📞 WhatsApp: 3543585175</p>
+</footer>
+
+<div class="modal" id="productModal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="swiper" id="modalSwiper">
+            <div class="swiper-wrapper" id="modalSwiperWrapper"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+        <div class="modal-info">
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-price" id="modalPrice"></div>
+            <div class="color-selector" id="colorSelector">
+                <strong>🎨 Seleccioná un color:</strong>
+                <div class="color-options" id="colorOptions"></div>
+                <div class="error-message" id="colorError">⚠️ Por favor, seleccioná un color</div>
+            </div>
+            <div class="size-selector" id="sizeSelector" style="display:none;">
+                <strong>📏 Talle:</strong>
+                <div class="size-options" id="sizeOptions"></div>
+            </div>
+            <button class="modal-add-btn" id="modalAddBtn">
+                <i class="fas fa-cart-plus"></i> Agregar al carrito
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <h3><i class="fas fa-shopping-bag"></i> Tu Carrito</h3>
+        <span class="close-cart" id="closeCartBtn">&times;</span>
+    </div>
+    <div class="cart-items" id="cartItemsList">
+        <p style="text-align:center; color:gray;">🛒 Vacío</p>
+    </div>
+    <div class="pickup-info">
+        <i class="fas fa-store"></i> Retiro: Reconquista 115, Unquillo
+    </div>
+    <div class="cart-total" id="cartTotal">Total: $0</div>
+    <button class="btn-whatsapp" id="whatsappOrderBtn">
+        <i class="fab fa-whatsapp"></i> Pedir por WhatsApp
+    </button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    const baseURL = "https://raw.githubusercontent.com/estudianteagustinf-source/SportFitness-imagenes/main/";
+    
+    const imagenes = {
+        bucales: baseURL + "bucales.jpg",
+        canilleraRosa: baseURL + "canillera%20rosa.jpg",
+        canilleraVioleta: baseURL + "canillera%20violeta.jpg",
+        gelAlgabo: baseURL + "gel%20algabo.jpg",
+        mediaVlack: baseURL + "media%20vlack.jpg",
+        mediasNegras: baseURL + "medias%20negras.jpg",
+        mediasRosas: baseURL + "medias%20rosas.jpg",
+        topBlanco: baseURL + "Top%20blanco.jpg",
+        topFuxia: baseURL + "top%20fuxia.jpg",
+        topGriz: baseURL + "top%20griz.jpg",
+        topMarron: baseURL + "top%20marron.jpg",
+        vinchasVlack: baseURL + "vinchas%20vlack.jpg"
+    };
+
+    // ✅ MAPEO DE COLORES CORREGIDO
+    const colorMap = {
+        "Blanco": "#FFFFFF",
+        "Fucsia": "#FF00FF",
+        "Gris": "#808080",
+        "Marrón": "#8B4513",
+        "Negro": "#000000",
+        "Verde agua": "#00FFCC",
+        "Azul": "#0000FF",
+        "Verde": "#00AA00",
+        "Roja": "#FF0000",
+        "Rojo": "#FF0000",
+        "Rosa": "#FF69B4",
+        "Violeta": "#8B5CF6",
+        "Lila": "#C8A2C8",
+        "Celeste": "#87CEEB",
+        "Naranja": "#FFA500"
+    };
+
+    const productos = [
+        { id: 1, nombre: "Top Deportivo", precio: 8000, colores: ["Blanco", "Fucsia", "Gris", "Marrón"], talles: ["M"], tieneTalle: true, requiereColor: true, imagenes: { "Blanco": [imagenes.topBlanco], "Fucsia": [imagenes.topFuxia], "Gris": [imagenes.topGriz], "Marrón": [imagenes.topMarron] }, destacado: true, categoria: "indumentaria", imagenPorDefecto: imagenes.topBlanco },
+        { id: 2, nombre: "Medias Negras", precio: 7500, colores: ["Negro"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Negro": [imagenes.mediasNegras] }, destacado: false, categoria: "indumentaria", imagenPorDefecto: imagenes.mediasNegras },
+        { id: 3, nombre: "Medias Rosas", precio: 6500, colores: ["Rosa"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Rosa": [imagenes.mediasRosas] }, destacado: false, categoria: "indumentaria", imagenPorDefecto: imagenes.mediasRosas },
+        { id: 4, nombre: "Medias Vlacks", precio: 9900, colores: ["Azul", "Verde", "Roja", "Fucsia"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Azul": [imagenes.mediaVlack], "Verde": [imagenes.mediaVlack], "Roja": [imagenes.mediaVlack], "Fucsia": [imagenes.mediaVlack] }, destacado: true, categoria: "indumentaria", imagenPorDefecto: imagenes.mediaVlack },
+        { id: 5, nombre: "Vinchas Black", precio: 6800, colores: ["Negro", "Verde agua", "Fucsia"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Negro": [imagenes.vinchasVlack], "Verde agua": [imagenes.vinchasVlack], "Fucsia": [imagenes.vinchasVlack] }, destacado: true, categoria: "indumentaria", imagenPorDefecto: imagenes.vinchasVlack },
+        { id: 6, nombre: "Canilleras de Hockey", precio: 12000, colores: ["Rosa", "Violeta"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Rosa": [imagenes.canilleraRosa], "Violeta": [imagenes.canilleraVioleta] }, destacado: true, categoria: "accesorios", imagenPorDefecto: imagenes.canilleraRosa },
+        { id: 7, nombre: "Bucales de Hockey", precio: 4500, colores: ["Lila", "Rojo", "Celeste", "Naranja"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Lila": [imagenes.bucales], "Rojo": [imagenes.bucales], "Celeste": [imagenes.bucales], "Naranja": [imagenes.bucales] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.bucales },
+        { id: 8, nombre: "Gel Algabo", precio: 3000, colores: ["Fijación extra fuerte"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Fijación extra fuerte": [imagenes.gelAlgabo] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.gelAlgabo }
+    ];
+
+    let carrito = [];
+    let currentProduct = null;
+    let selectedColor = null;
+    let selectedSize = null;
+    let swiperInstance = null;
+
+    function renderProductos(categoria) {
+        const container = document.getElementById('productosContainer');
+        if (!container) return;
+        
+        let productosFiltrados = productos.filter(p => p.categoria === categoria);
+        productosFiltrados.sort((a,b) => (b.destacado ? 1 : 0) - (a.destacado ? 1 : 0));
+        
+        let html = `<div class="section"><h2 class="section-title">${categoria === 'indumentaria' ? '👕 Indumentaria' : '🧤 Accesorios'}</h2><div class="productos-grid">`;
+        
+        productosFiltrados.forEach(p => {
+            const primerColor = p.colores[0];
+            const primerImg = p.imagenes[primerColor] ? p.imagenes[primerColor][0] : '';
+            html += `
+                <div class="product-card" onclick="abrirModal(${p.id})">
+                    ${p.destacado ? '<div class="destacado-badge">⭐ DESTACADO</div>' : ''}
+                    <div class="product-img-container">
+                        <img class="product-img" src="${primerImg}" alt="${p.nombre}" onerror="this.src='https://placehold.co/400x400?text=Imagen+no+disponible'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${p.nombre}</h3>
+                        <div class="product-price">$${p.precio.toLocaleString()}</div>
+                        <button class="btn-quick-view" onclick="event.stopPropagation(); abrirModal(${p.id})"><i class="fas fa-eye"></i> Ver detalles</button>
+                    </div>
+                </div>
+            `;
+        });
+        html += `</div></div>`;
+        container.innerHTML = html;
+    }
+
+    window.abrirModal = function(id) {
+        currentProduct = productos.find(p => p.id === id);
+        if (!currentProduct) return;
+        
+        selectedColor = null;
+        selectedSize = currentProduct.tieneTalle && currentProduct.talles.length > 0 ? currentProduct.talles[0] : null;
+        
+        document.getElementById('modalTitle').innerText = currentProduct.nombre;
+        document.getElementById('modalPrice').innerHTML = `$${currentProduct.precio.toLocaleString()}`;
+        
+        const colorSelector = document.getElementById('colorSelector');
+        const addBtn = document.getElementById('modalAddBtn');
+        
+        if (currentProduct.requiereColor && currentProduct.colores.length > 1) {
+            colorSelector.style.display = 'block';
+            const colorContainer = document.getElementById('colorOptions');
+            colorContainer.innerHTML = currentProduct.colores.map(color => {
+                const bgColor = colorMap[color] || "#CCCCCC";
+                return `<div class="color-option" style="background: ${bgColor}; border: 2px solid #333;" data-color="${color}" title="${color}"></div>`;
+            }).join('');
+            
+            document.querySelectorAll('.color-option').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
+                    el.classList.add('selected');
+                    selectedColor = el.dataset.color;
+                    addBtn.classList.remove('disabled');
+                    addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Agregar al carrito';
+                    document.getElementById('colorError').style.display = 'none';
+                    actualizarCarrusel();
+                });
+            });
+            
+            addBtn.classList.add('disabled');
+            addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Seleccioná un color primero';
+            document.getElementById('colorError').style.display = 'none';
+        } else {
+            colorSelector.style.display = 'none';
+            selectedColor = currentProduct.colores[0];
+            addBtn.classList.remove('disabled');
+            addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Agregar al carrito';
+        }
+        
+        const sizeSelector = document.getElementById('sizeSelector');
+        if (currentProduct.tieneTalle && currentProduct.talles.length > 0) {
+            sizeSelector.style.display = 'block';
+            const sizeContainer = document.getElementById('sizeOptions');
+            sizeContainer.innerHTML = currentProduct.talles.map(t => `<div class="size-option" data-size="${t}">${t}</div>`).join('');
+            document.querySelectorAll('.size-option').forEach(el => {
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('.size-option').forEach(s => s.classList.remove('selected'));
+                    el.classList.add('selected');
+                    selectedSize = el.dataset.size;
+                });
+            });
+            if(document.querySelectorAll('.size-option')[0]) {
+                document.querySelectorAll('.size-option')[0].classList.add('selected');
+            }
+        } else {
+            sizeSelector.style.display = 'none';
+        }
+        
+        let defaultImg = currentProduct.imagenPorDefecto;
+        const wrapper = document.getElementById('modalSwiperWrapper');
+        wrapper.innerHTML = `<div class="swiper-slide"><img src="${defaultImg}" alt="${currentProduct.nombre}"></div>`;
+        if (swiperInstance) swiperInstance.destroy();
+        swiperInstance = new Swiper('#modalSwiper', {
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            loop: false
+        });
+        
+        document.getElementById('productModal').classList.add('active');
+    }
+    
+    function actualizarCarrusel() {
+        if (!currentProduct || !selectedColor || !currentProduct.imagenes[selectedColor]) return;
+        const imagenesLista = currentProduct.imagenes[selectedColor];
+        const wrapper = document.getElementById('modalSwiperWrapper');
+        wrapper.innerHTML = imagenesLista.map(img => `<div class="swiper-slide"><img src="${img}" alt="${currentProduct.nombre} - ${selectedColor}" onerror="this.src='https://placehold.co/400x400?text=Imagen+no+disponible'"></div>`).join('');
+        
+        if (swiperInstance) swiperInstance.destroy();
+        swiperInstance = new Swiper('#modalSwiper', {
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            loop: true
+        });
+    }
+    
+    document.querySelector('.close-modal').addEventListener('click', () => {
+        document.getElementById('productModal').classList.remove('active');
+        if (swiperInstance) swiperInstance.destroy();
+    });
+    
+    document.getElementById('modalAddBtn').addEventListener('click', () => {
+        if (currentProduct.requiereColor && !selectedColor) {
+            document.getElementById('colorError').style.display = 'block';
+            return;
+        }
+        if (!currentProduct) return;
+        let variante = selectedColor || currentProduct.colores[0];
+        if (selectedSize) variante += ` - Talle ${selectedSize}`;
+        agregarAlCarrito(currentProduct.id, currentProduct.nombre, currentProduct.precio, variante);
+        document.getElementById('productModal').classList.remove('active');
+    });
+    
+    function agregarAlCarrito(id, nombre, precio, variante) {
+        const uniqueId = `${id}-${variante}`;
+        const existe = carrito.find(item => item.uniqueId === uniqueId);
+        if (existe) existe.cantidad++;
+        else carrito.push({ id, nombre, precio, variante, cantidad: 1, uniqueId });
+        actualizarCarritoUI();
+        
+        const notif = document.createElement('div');
+        notif.style.cssText = 'position:fixed; bottom:20px; right:20px; background:linear-gradient(135deg, #ff2a7a, #8b5cf6); color:white; padding:12px 24px; border-radius:50px; z-index:10000; animation:fadeInOut 2s ease;';
+        notif.innerHTML = `<i class="fas fa-check-circle"></i> ${nombre} (${variante}) agregado!`;
+        document.body.appendChild(notif);
+        setTimeout(() => notif.remove(), 2000);
+    }
+    
+    function eliminarDelCarrito(uniqueId) {
+        const index = carrito.findIndex(item => item.uniqueId === uniqueId);
+        if (index !== -1) {
+            if (carrito[index].cantidad > 1) carrito[index].cantidad--;
+            else carrito.splice(index, 1);
+        }
+        actualizarCarritoUI();
+    }
+    
+    function actualizarCarritoUI() {
+        const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+        const cartCount = document.getElementById('cartCount');
+        if (cartCount) cartCount.innerText = totalItems;
+        
+        const cartItemsList = document.getElementById('cartItemsList');
+        const cartTotalSpan = document.getElementById('cartTotal');
+        
+        if (carrito.length === 0) {
+            if (cartItemsList) cartItemsList.innerHTML = '<p style="text-align:center; color:gray;">🛒 Vacío</p>';
+            if (cartTotalSpan) cartTotalSpan.innerText = 'Total: $0';
+            return;
+        }
+        
+        let html = '', total = 0;
+        carrito.forEach(item => {
+            const subtotal = item.precio * item.cantidad;
+            total += subtotal;
+            html += `<div class="cart-item"><div class="cart-item-info"><p>${item.nombre}</p><div class="cart-item-variant">${item.variante}</div><small>${item.cantidad} x $${item.precio.toLocaleString()}</small></div><div><span class="cart-item-price">$${subtotal.toLocaleString()}</span><button class="remove-item" data-unique="${item.uniqueId}"><i class="fas fa-trash-alt"></i></button></div></div>`;
+        });
+        if (cartItemsList) cartItemsList.innerHTML = html;
+        if (cartTotalSpan) cartTotalSpan.innerText = `Total: $${total.toLocaleString()}`;
+        
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', () => eliminarDelCarrito(btn.dataset.unique));
+        });
+    }
+    
+    function generarMensaje() {
+        if (carrito.length === 0) return alert("❌ Agregá productos al carrito");
+        let msg = "🏋️‍♂️ *PEDIDO SPORT FITNESS*%0A%0A";
+        let total = 0;
+        carrito.forEach(item => {
+            const subtotal = item.precio * item.cantidad;
+            total += subtotal;
+            msg += `• ${item.nombre} (${item.variante}) x${item.cantidad} = $${subtotal.toLocaleString()}%0A`;
+        });
+        msg += `%0A💰 Total: $${total.toLocaleString()}%0A📍 Retiro: Reconquista 115, Unquillo%0A📅 ¿Cuándo pasás?%0A👤 Nombre y teléfono:`;
+        return msg;
+    }
+    
+    document.getElementById('whatsappOrderBtn').addEventListener('click', () => {
+        const msg = generarMensaje();
+        if (msg) window.open(`https://wa.me/3543585175?text=${msg}`, '_blank');
+    });
+    
+    const navLinks = document.querySelectorAll('.nav-link');
+    function setActiveSection(section) {
+        renderProductos(section);
+        navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === section));
+        const navMenu = document.getElementById('navMenu');
+        if (navMenu) navMenu.classList.remove('active');
+    }
+    navLinks.forEach(l => l.addEventListener('click', (e) => { e.preventDefault(); setActiveSection(l.dataset.section); }));
+    document.getElementById('hamburgerBtn').addEventListener('click', () => {
+        const navMenu = document.getElementById('navMenu');
+        if (navMenu) navMenu.classList.toggle('active');
+    });
+    
+    const cartSidebar = document.getElementById('cartSidebar'), overlay = document.getElementById('overlay');
+    document.getElementById('cartIconBtn').addEventListener('click', () => { if(cartSidebar) cartSidebar.classList.add('open'); if(overlay) overlay.classList.add('active'); });
+    document.getElementById('closeCartBtn').addEventListener('click', () => { if(cartSidebar) cartSidebar.classList.remove('open'); if(overlay) overlay.classList.remove('active'); });
+    if(overlay) overlay.addEventListener('click', () => { if(cartSidebar) cartSidebar.classList.remove('open'); if(overlay) overlay.classList.remove('active'); });
+    
+    renderProductos('indumentaria');
+    actualizarCarritoUI();
+</script>
+</body>
+</html>

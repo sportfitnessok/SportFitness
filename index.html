@@ -48,12 +48,16 @@
         .modal-info { padding: 25px; }
         .modal-title { font-size: 1.5rem; font-weight: 800; }
         .modal-price { color: var(--fucsia); font-size: 1.8rem; font-weight: 800; margin: 10px 0; }
-        .color-selector, .size-selector { margin: 15px 0; }
-        .color-options, .size-options { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+        .color-selector, .size-selector, .offer-selector { margin: 15px 0; }
+        .color-options, .size-options, .offer-options { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
         .color-option { width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 3px solid #ddd; transition: 0.2s; background-size: cover; background-position: center; }
         .color-option.selected { border: 3px solid var(--fucsia); transform: scale(1.1); box-shadow: 0 0 10px var(--fucsia); }
         .size-option { padding: 8px 20px; border: 1px solid #ddd; border-radius: 30px; cursor: pointer; transition: 0.2s; }
         .size-option.selected { background: var(--violeta); color: white; border-color: var(--violeta); }
+        .offer-option { background: #f0eaff; border: 2px solid #ddd; border-radius: 12px; padding: 10px 20px; cursor: pointer; transition: 0.2s; flex: 1; text-align: center; min-width: 120px; }
+        .offer-option:hover { background: #e0d4ff; }
+        .offer-option.selected { border-color: var(--fucsia); background: linear-gradient(135deg, #f0eaff, #ffe0f0); box-shadow: 0 2px 8px rgba(255,42,122,0.2); }
+        .offer-price-save { color: var(--fucsia); font-weight: bold; font-size: 0.8rem; margin-top: 4px; }
         .modal-add-btn { background: linear-gradient(135deg, var(--violeta), var(--violeta-oscuro)); color: white; border: none; padding: 14px; width: 100%; border-radius: 50px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px; transition: 0.3s; }
         .modal-add-btn.disabled { opacity: 0.5; cursor: not-allowed; background: #999; }
         .cart-sidebar { position: fixed; top: 0; right: -450px; width: 400px; max-width: 90%; height: 100%; background: white; box-shadow: -5px 0 25px rgba(0,0,0,0.2); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 20px; border-left: 5px solid var(--fucsia); }
@@ -99,7 +103,7 @@
 </div>
 
 <div class="pickup-banner">
-    <i class="fas fa-map-marker-alt"></i> 📍 Retira tu pedido en Reconquista 115, Unquillo, Barrio Residencial (No realizamos envíos)
+    <i class="fas fa-map-marker-alt"></i> 📍 Retiro por local: Reconquista 115, Unquillo, Barrio Residencial (No realizamos envíos)
 </div>
 
 <main>
@@ -130,6 +134,10 @@
             <div class="size-selector" id="sizeSelector" style="display:none;">
                 <strong>📏 Talle:</strong>
                 <div class="size-options" id="sizeOptions"></div>
+            </div>
+            <div class="offer-selector" id="offerSelector" style="display:none;">
+                <strong>📦 Elegí tu oferta:</strong>
+                <div class="offer-options" id="offerOptions"></div>
             </div>
             <button class="modal-add-btn" id="modalAddBtn">
                 <i class="fas fa-cart-plus"></i> Agregar al carrito
@@ -172,10 +180,10 @@
         topFuxia: baseURL + "top%20fuxia.jpg",
         topGriz: baseURL + "top%20griz.jpg",
         topMarron: baseURL + "top%20marron.jpg",
-        vinchasVlack: baseURL + "vinchas%20vlack.jpg"
+        vinchasVlack: baseURL + "vinchas%20vlack.jpg",
+        mediasTresCuartos: "https://raw.githubusercontent.com/sportfitnessok/SportFitness-imagenes/main/medias%20tres%20cuartos.jpg"
     };
 
-    // Mapeo de colores a sus códigos CSS
     const colorMap = {
         "Blanco": "#FFFFFF",
         "Fucsia": "#FF00FF",
@@ -187,57 +195,43 @@
         "Azul": "#0000FF",
         "Verde": "#00AA00",
         "Roja": "#FF0000",
-        "Rojo": "#FF0000",
         "Rosa": "#FF69B4",
         "Lila": "#C8A2C8",
-        "Celeste": "#87CEEB",
         "Naranja": "#FFA500"
     };
 
     const productos = [
         // INDUMENTARIA
         { id: 1, nombre: "Top Deportivo", precio: 8000, colores: ["Blanco", "Fucsia", "Gris", "Marrón"], talles: ["M"], tieneTalle: true, requiereColor: true, imagenes: { "Blanco": [imagenes.topBlanco], "Fucsia": [imagenes.topFuxia], "Gris": [imagenes.topGriz], "Marrón": [imagenes.topMarron] }, destacado: true, categoria: "indumentaria", imagenPorDefecto: imagenes.topBlanco },
-        { id: 2, nombre: "Medias Negras", precio: 7500, colores: ["Negro"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Negro": [imagenes.mediasNegras] }, destacado: false, categoria: "indumentaria", imagenPorDefecto: imagenes.mediasNegras },
+        { id: 2, nombre: "Medias Negras", precio: 7500, colores: ["Negro"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Negro": [imagenes.mediasNegras] }, destacado: true, categoria: "indumentaria", imagenPorDefecto: imagenes.mediasNegras },
         { id: 3, nombre: "Medias Rosas", precio: 6500, colores: ["Rosa"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Rosa": [imagenes.mediasRosas] }, destacado: false, categoria: "indumentaria", imagenPorDefecto: imagenes.mediasRosas },
-        { id: 4, nombre: "Medias Vlack", precio: 11000, colores: ["Azul", "Verde", "Roja", "Fucsia"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Azul": [imagenes.mediaVlack], "Verde": [imagenes.mediaVlack], "Roja": [imagenes.mediaVlack], "Fucsia": [imagenes.mediaVlack] }, destacado: true, categoria: "indumentaria", imagenPorDefecto: imagenes.mediaVlack },
+        { id: 4, nombre: "Medias Vlacks", precio: 11000, colores: ["Azul", "Verde", "Roja", "Fucsia"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Azul": [imagenes.mediaVlack], "Verde": [imagenes.mediaVlack], "Roja": [imagenes.mediaVlack], "Fucsia": [imagenes.mediaVlack] }, destacado: false, categoria: "indumentaria", imagenPorDefecto: imagenes.mediaVlack },
+        { id: 9, nombre: "Medias Tres Cuartos", precioBase: 3500, oferta3: 10000, tieneOferta: true, colores: ["Único"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Único": [imagenes.mediasTresCuartos] }, destacado: false, categoria: "indumentaria", imagenPorDefecto: imagenes.mediasTresCuartos },
         // ACCESORIOS
-        { id: 5, nombre: "Vinchas Vlack", precio: 6800, colores: ["Negro", "Verde agua", "Fucsia", "Blanco", "Violeta"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Negro": [imagenes.vinchasVlack], "Verde agua": [imagenes.vinchasVlack], "Fucsia": [imagenes.vinchasVlack], "Blanco": [imagenes.vinchasVlack], "Violeta": [imagenes.vinchasVlack] }, destacado: true, categoria: "accesorios", imagenPorDefecto: imagenes.vinchasVlack },
+        { id: 5, nombre: "Vinchas Black", precio: 6800, colores: ["Negro", "Verde agua", "Fucsia", "Blanco", "Violeta"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Negro": [imagenes.vinchasVlack], "Verde agua": [imagenes.vinchasVlack], "Fucsia": [imagenes.vinchasVlack], "Blanco": [imagenes.vinchasVlack], "Violeta": [imagenes.vinchasVlack] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.vinchasVlack },
         { id: 6, nombre: "Canilleras de Hockey", precio: 12000, colores: ["Rosa", "Violeta"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Rosa": [imagenes.canilleraRosa], "Violeta": [imagenes.canilleraVioleta] }, destacado: true, categoria: "accesorios", imagenPorDefecto: imagenes.canilleraRosa },
-        { id: 7, nombre: "Bucales de Hockey", precio: 4500, colores: ["Azul", "Rosa", "Naranja", "Lila"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Azul": [imagenes.bucales], "Rosa": [imagenes.bucales], "Naranja": [imagenes.bucales], "Lila": [imagenes.bucales] }, destacado: true, categoria: "accesorios", imagenPorDefecto: imagenes.bucales },
-        { id: 8, nombre: "Gel Algabo", precio: 3000, colores: ["Fijación extra fuerte"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Fijación extra fuerte": [imagenes.gelAlgabo] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.gelAlgabo }
+        { id: 7, nombre: "Bucales de Hockey", precio: 4500, colores: ["Azul", "Rosa", "Naranja", "Lila"], talles: [], tieneTalle: false, requiereColor: true, imagenes: { "Azul": [imagenes.bucales], "Rosa": [imagenes.bucales], "Naranja": [imagenes.bucales], "Lila": [imagenes.bucales] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.bucales },
+        { id: 8, nombre: "Gel Algabo", precio: 300, colores: ["Fijación extra fuerte"], talles: [], tieneTalle: false, requiereColor: false, imagenes: { "Fijación extra fuerte": [imagenes.gelAlgabo] }, destacado: false, categoria: "accesorios", imagenPorDefecto: imagenes.gelAlgabo }
     ];
 
     let carrito = [];
     let currentProduct = null;
     let selectedColor = null;
     let selectedSize = null;
+    let selectedOffer = null;
     let swiperInstance = null;
 
     function renderProductos(categoria) {
         const container = document.getElementById('productosContainer');
         if (!container) return;
-        
         let productosFiltrados = productos.filter(p => p.categoria === categoria);
         productosFiltrados.sort((a,b) => (b.destacado ? 1 : 0) - (a.destacado ? 1 : 0));
-        
         let html = `<div class="section"><h2 class="section-title">${categoria === 'indumentaria' ? '👕 Indumentaria' : '🧤 Accesorios'}</h2><div class="productos-grid">`;
-        
         productosFiltrados.forEach(p => {
+            let precioMostrar = p.precio || p.precioBase || 0;
             const primerColor = p.colores[0];
             const primerImg = p.imagenes[primerColor] ? p.imagenes[primerColor][0] : '';
-            html += `
-                <div class="product-card" onclick="abrirModal(${p.id})">
-                    ${p.destacado ? '<div class="destacado-badge">⭐ DESTACADO</div>' : ''}
-                    <div class="product-img-container">
-                        <img class="product-img" src="${primerImg}" alt="${p.nombre}" onerror="this.src='https://placehold.co/400x400?text=Imagen+no+disponible'">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">${p.nombre}</h3>
-                        <div class="product-price">$${p.precio.toLocaleString()}</div>
-                        <button class="btn-quick-view" onclick="event.stopPropagation(); abrirModal(${p.id})"><i class="fas fa-eye"></i> Ver detalles</button>
-                    </div>
-                </div>
-            `;
+            html += `<div class="product-card" onclick="abrirModal(${p.id})">${p.destacado ? '<div class="destacado-badge">⭐ DESTACADO</div>' : ''}<div class="product-img-container"><img class="product-img" src="${primerImg}" alt="${p.nombre}" onerror="this.src='https://placehold.co/400x400?text=Imagen+no+disponible'"></div><div class="product-info"><h3 class="product-title">${p.nombre}</h3><div class="product-price">$${precioMostrar.toLocaleString()}</div><button class="btn-quick-view" onclick="event.stopPropagation(); abrirModal(${p.id})"><i class="fas fa-eye"></i> Ver detalles</button></div></div>`;
         });
         html += `</div></div>`;
         container.innerHTML = html;
@@ -246,12 +240,13 @@
     window.abrirModal = function(id) {
         currentProduct = productos.find(p => p.id === id);
         if (!currentProduct) return;
-        
         selectedColor = null;
         selectedSize = currentProduct.tieneTalle && currentProduct.talles.length > 0 ? currentProduct.talles[0] : null;
+        selectedOffer = currentProduct.tieneOferta ? "1" : null;
         
+        let precioInicial = currentProduct.precio || currentProduct.precioBase || 0;
         document.getElementById('modalTitle').innerText = currentProduct.nombre;
-        document.getElementById('modalPrice').innerHTML = `$${currentProduct.precio.toLocaleString()}`;
+        document.getElementById('modalPrice').innerHTML = `$${precioInicial.toLocaleString()}`;
         
         const colorSelector = document.getElementById('colorSelector');
         const addBtn = document.getElementById('modalAddBtn');
@@ -263,7 +258,6 @@
                 const bgColor = colorMap[color] || "#CCCCCC";
                 return `<div class="color-option" style="background: ${bgColor}; border: 2px solid #333;" data-color="${color}" title="${color}"></div>`;
             }).join('');
-            
             document.querySelectorAll('.color-option').forEach(el => {
                 el.addEventListener('click', (e) => {
                     document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
@@ -275,7 +269,6 @@
                     actualizarCarrusel();
                 });
             });
-            
             addBtn.classList.add('disabled');
             addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Seleccioná un color primero';
             document.getElementById('colorError').style.display = 'none';
@@ -298,22 +291,48 @@
                     selectedSize = el.dataset.size;
                 });
             });
-            if(document.querySelectorAll('.size-option')[0]) {
-                document.querySelectorAll('.size-option')[0].classList.add('selected');
-            }
+            if(document.querySelectorAll('.size-option')[0]) document.querySelectorAll('.size-option')[0].classList.add('selected');
         } else {
             sizeSelector.style.display = 'none';
+        }
+        
+        const offerSelector = document.getElementById('offerSelector');
+        if (currentProduct.tieneOferta) {
+            offerSelector.style.display = 'block';
+            const offerContainer = document.getElementById('offerOptions');
+            const precioUnitario = currentProduct.precioBase;
+            const precioOferta = currentProduct.oferta3;
+            const ahorro = (precioUnitario * 3) - precioOferta;
+            offerContainer.innerHTML = `
+                <div class="offer-option" data-offer="1">
+                    <strong>1 par</strong>
+                    <div>$${precioUnitario.toLocaleString()}</div>
+                </div>
+                <div class="offer-option" data-offer="3">
+                    <strong>3 pares</strong>
+                    <div>$${precioOferta.toLocaleString()}</div>
+                    <div class="offer-price-save">✨ Ahorrás $${ahorro.toLocaleString()}</div>
+                </div>
+            `;
+            document.querySelectorAll('.offer-option').forEach(el => {
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('.offer-option').forEach(o => o.classList.remove('selected'));
+                    el.classList.add('selected');
+                    selectedOffer = el.dataset.offer;
+                    let precioMostrado = selectedOffer === "1" ? currentProduct.precioBase : currentProduct.oferta3;
+                    document.getElementById('modalPrice').innerHTML = `$${precioMostrado.toLocaleString()}`;
+                });
+            });
+            document.querySelectorAll('.offer-option')[0]?.classList.add('selected');
+        } else {
+            offerSelector.style.display = 'none';
         }
         
         let defaultImg = currentProduct.imagenPorDefecto;
         const wrapper = document.getElementById('modalSwiperWrapper');
         wrapper.innerHTML = `<div class="swiper-slide"><img src="${defaultImg}" alt="${currentProduct.nombre}"></div>`;
         if (swiperInstance) swiperInstance.destroy();
-        swiperInstance = new Swiper('#modalSwiper', {
-            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-            loop: false
-        });
-        
+        swiperInstance = new Swiper('#modalSwiper', { navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, loop: false });
         document.getElementById('productModal').classList.add('active');
     }
     
@@ -322,12 +341,8 @@
         const imagenesLista = currentProduct.imagenes[selectedColor];
         const wrapper = document.getElementById('modalSwiperWrapper');
         wrapper.innerHTML = imagenesLista.map(img => `<div class="swiper-slide"><img src="${img}" alt="${currentProduct.nombre} - ${selectedColor}" onerror="this.src='https://placehold.co/400x400?text=Imagen+no+disponible'"></div>`).join('');
-        
         if (swiperInstance) swiperInstance.destroy();
-        swiperInstance = new Swiper('#modalSwiper', {
-            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-            loop: true
-        });
+        swiperInstance = new Swiper('#modalSwiper', { navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, loop: true });
     }
     
     document.querySelector('.close-modal').addEventListener('click', () => {
@@ -341,9 +356,21 @@
             return;
         }
         if (!currentProduct) return;
-        let variante = selectedColor || currentProduct.colores[0];
+        
+        let cantidadTexto = "";
+        let precioFinal = currentProduct.precio || currentProduct.precioBase || 0;
+        
+        if (currentProduct.tieneOferta && selectedOffer === "3") {
+            precioFinal = currentProduct.oferta3;
+            cantidadTexto = " (3 pares - OFERTA)";
+        } else if (currentProduct.tieneOferta && selectedOffer === "1") {
+            precioFinal = currentProduct.precioBase;
+            cantidadTexto = " (1 par)";
+        }
+        
+        let variante = (selectedColor || currentProduct.colores[0]) + cantidadTexto;
         if (selectedSize) variante += ` - Talle ${selectedSize}`;
-        agregarAlCarrito(currentProduct.id, currentProduct.nombre, currentProduct.precio, variante);
+        agregarAlCarrito(currentProduct.id, currentProduct.nombre, precioFinal, variante);
         document.getElementById('productModal').classList.remove('active');
     });
     
@@ -353,7 +380,6 @@
         if (existe) existe.cantidad++;
         else carrito.push({ id, nombre, precio, variante, cantidad: 1, uniqueId });
         actualizarCarritoUI();
-        
         const notif = document.createElement('div');
         notif.style.cssText = 'position:fixed; bottom:20px; right:20px; background:linear-gradient(135deg, #ff2a7a, #8b5cf6); color:white; padding:12px 24px; border-radius:50px; z-index:10000; animation:fadeInOut 2s ease;';
         notif.innerHTML = `<i class="fas fa-check-circle"></i> ${nombre} (${variante}) agregado!`;
@@ -374,16 +400,13 @@
         const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
         const cartCount = document.getElementById('cartCount');
         if (cartCount) cartCount.innerText = totalItems;
-        
         const cartItemsList = document.getElementById('cartItemsList');
         const cartTotalSpan = document.getElementById('cartTotal');
-        
         if (carrito.length === 0) {
             if (cartItemsList) cartItemsList.innerHTML = '<p style="text-align:center; color:gray;">🛒 Vacío</p>';
             if (cartTotalSpan) cartTotalSpan.innerText = 'Total: $0';
             return;
         }
-        
         let html = '', total = 0;
         carrito.forEach(item => {
             const subtotal = item.precio * item.cantidad;
@@ -392,7 +415,6 @@
         });
         if (cartItemsList) cartItemsList.innerHTML = html;
         if (cartTotalSpan) cartTotalSpan.innerText = `Total: $${total.toLocaleString()}`;
-        
         document.querySelectorAll('.remove-item').forEach(btn => {
             btn.addEventListener('click', () => eliminarDelCarrito(btn.dataset.unique));
         });
